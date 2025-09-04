@@ -96,11 +96,6 @@
     }
 
     function getKeyFromEvent(e) {
-      if (e.ctrlKey && e.key !== 'Control') return 'Control';
-      if (e.shiftKey && e.key !== 'Shift') return 'Shift';
-      if (e.altKey && e.key !== 'Alt') return 'Alt';
-      if (e.metaKey && e.key !== 'Meta') return 'Meta';
-
       const key = e.key.length === 1 ? e.key.toUpperCase() : e.key;
 
       const keyMap = {
@@ -113,15 +108,40 @@
         'ArrowUp': 'ArrowUp',
         'ArrowDown': 'ArrowDown',
         'ArrowLeft': 'ArrowLeft',
-        'ArrowRight': 'ArrowRight'
+        'ArrowRight': 'ArrowRight',
+        'Control': 'Control',
+        'Shift': 'Shift',
+        'Alt': 'Alt',
+        'Meta': 'Meta'
       };
 
       return keyMap[e.key] || key;
     }
 
+    function isKeyPressedAlone(e, targetKey) {
+      // Check if any modifier keys are pressed when they shouldn't be
+      if (targetKey === 'Control') {
+        // Control key should be pressed alone - no other modifiers or keys
+        return e.key === 'Control' && !e.shiftKey && !e.altKey && !e.metaKey;
+      } else if (targetKey === 'Shift') {
+        // Shift key should be pressed alone
+        return e.key === 'Shift' && !e.ctrlKey && !e.altKey && !e.metaKey;
+      } else if (targetKey === 'Alt') {
+        // Alt key should be pressed alone
+        return e.key === 'Alt' && !e.ctrlKey && !e.shiftKey && !e.metaKey;
+      } else if (targetKey === 'Meta') {
+        // Meta key should be pressed alone
+        return e.key === 'Meta' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+      } else {
+        // For non-modifier keys, ensure no modifiers are pressed
+        const pressedKey = getKeyFromEvent(e);
+        return pressedKey === targetKey && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
+      }
+    }
+
     document.addEventListener('keydown', (e) => {
-      const pressedKey = getKeyFromEvent(e);
-      if (pressedKey === activationKey && !isKeyPressed) {
+      // Only activate if the key is pressed alone (no combinations)
+      if (isKeyPressedAlone(e, activationKey) && !isKeyPressed) {
         isKeyPressed = true;
         document.body.style.cursor = 'crosshair';
       }
@@ -129,7 +149,8 @@
 
     document.addEventListener('keyup', (e) => {
       const releasedKey = getKeyFromEvent(e);
-      if (releasedKey === activationKey) {
+      // Only deactivate if it's our activation key being released
+      if (releasedKey === activationKey && isKeyPressed) {
         isKeyPressed = false;
         document.body.style.cursor = '';
 
