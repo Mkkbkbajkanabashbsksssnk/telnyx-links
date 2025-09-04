@@ -5,6 +5,12 @@
     let selectedLinks = new Set();
     let activationKey = 'Shift';
     let isKeyPressed = false;
+    let keyHoldTimer = null;
+    let keyHoldStartTime = 0;
+    let isActivationKeyActive = false;
+    let statusCheckInterval = null;
+    let lastKeyStates = { ctrl: false, shift: false, alt: false, meta: false };
+    let stateValidationInterval = null;
 
     chrome.storage.sync.get(['activationKey'], (result) => {
       if (result.activationKey) {
@@ -15,6 +21,11 @@
     chrome.storage.onChanged.addListener((changes, namespace) => {
       if (namespace === 'sync' && changes.activationKey) {
         activationKey = changes.activationKey.newValue;
+
+        // Deactivate extension if currently active with old key
+        if (isKeyPressed || isActivationKeyActive) {
+          deactivateExtension();
+        }
       }
     });
 
@@ -119,55 +130,141 @@
     }
 
     function isKeyPressedAlone(e, targetKey) {
-      // Check if any modifier keys are pressed when they shouldn't be
-      if (targetKey === 'Control') {
-        // Control key should be pressed alone - no other modifiers or keys
-        return e.key === 'Control' && !e.shiftKey && !e.altKey && !e.metaKey;
-      } else if (targetKey === 'Shift') {
-        // Shift key should be pressed alone
-        return e.key === 'Shift' && !e.ctrlKey && !e.altKey && !e.metaKey;
-      } else if (targetKey === 'Alt') {
-        // Alt key should be pressed alone
-        return e.key === 'Alt' && !e.ctrlKey && !e.shiftKey && !e.metaKey;
-      } else if (targetKey === 'Meta') {
-        // Meta key should be pressed alone
-        return e.key === 'Meta' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+      // Get the current pressed key
+      const pressedKey = getKeyFromEvent(e);
+
+      // Must match the target key exactly
+      if (pressedKey !== targetKey) {
+        return false;
+      }
+
+      // Count how many modifier keys are currently pressed
+      let modifierCount = 0;
+      if (e.ctrlKey) modifierCount++;
+      if (e.shiftKey) modifierCount++;
+      if (e.altKey) modifierCount++;
+      if (e.metaKey) modifierCount++;
+
+      // For modifier keys like Control, Shift, Alt, Meta
+      if (targetKey === 'Control' || targetKey === 'Shift' || targetKey === 'Alt' || targetKey === 'Meta') {
+        // Only that specific modifier should be pressed (count should be exactly 1)
+        return modifierCount === 1;
       } else {
-        // For non-modifier keys, ensure no modifiers are pressed
-        const pressedKey = getKeyFromEvent(e);
-        return pressedKey === targetKey && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
+        // For non-modifier keys, no modifiers should be pressed at all
+        return modifierCount === 0;
       }
     }
 
-    document.addEventListener('keydown', (e) => {
-      // Only activate if the key is pressed alone (no combinations)
-      if (isKeyPressedAlone(e, activationKey) && !isKeyPressed) {
-        isKeyPressed = true;
-        document.body.style.cursor = 'crosshair';
+    function activateExtension() {
+      isActivationKeyActive = true;
+      document.body.style.cursor = 'crosshair';
+    }
+
+    function deactivateExtension() {
+      isActivationKeyActive = false;
+      isKeyPressed = false;
+      document.body.style.cursor = '';
+
+      // Clear ALL timers and intervals
+      if (keyHoldTimer) {
+        clearTimeout(keyHoldTimer);
+        keyHoldTimer = null;
       }
-    });
 
-    document.addEventListener('keyup', (e) => {
-      const releasedKey = getKeyFromEvent(e);
-      // Only deactivate if it's our activation key being released
-      if (releasedKey === activationKey && isKeyPressed) {
-        isKeyPressed = false;
-        document.body.style.cursor = '';
+      if (statusCheckInterval) {
+        clearInterval(statusCheckInterval);
+        statusCheckInterval = null;
+      }
 
-        // Reset start coordinates when key is released
-        startX = undefined;
-        startY = undefined;
+      if (stateValidationInterval) {
+        clearInterval(stateValidationInterval);
+        stateValidationInterval = null;
+      }
 
-        if (isSelecting) {
-          openSelectedLinks();
-          clearSelection();
-          isSelecting = false;
+      // Reset coordinates
+      startX = undefined;
+      startY = undefined;
+
+      // Handle any active selection
+      if (isSelecting) {
+        openSelectedLinks();
+        clearSelection();
+        isSelecting = false;
+      }
+
+      // Reset key states
+      lastKeyStates = { ctrl: false, shift: false, alt: false, meta: false };
+    }
+
+    function updateKeyStates(e) {
+      lastKeyStates.ctrl = e.ctrlKey;
+      lastKeyStates.shift = e.shiftKey;
+      lastKeyStates.alt = e.altKey;
+      lastKeyStates.meta = e.metaKey;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      // Update key states first
+      updateKeyStates(e);
+
+      const pressedKey = getKeyFromEvent(e);
+
+      // IMMEDIATE deactivation for ANY scenario that's not exactly our activation key alone
+      if (isKeyPressed || isActivationKeyActive) {
+        if (!isKeyPressedAlone(e, activationKey) || pressedKey !== activationKey) {
+          deactivateExtension();
+          return;
+        }
+      }
+
+      // Check if this is our activation key
+      if (pressedKey === activationKey) {
+        // MUST be pressed completely alone
+        if (!isKeyPressedAlone(e, activationKey)) {
+          deactivateExtension();
+          return;
+        }
+
+        // Only start timer if not already pressed
+        if (!isKeyPressed) {
+          isKeyPressed = true;
+          keyHoldStartTime = Date.now();
+
+          // Start timer for 0.5-second hold requirement
+          keyHoldTimer = setTimeout(() => {
+            // Only activate if key is still being held
+            if (isKeyPressed) {
+              activateExtension();
+            }
+          }, 500);
+        }
+      } else {
+        // ANY other key = immediate deactivation
+        if (isKeyPressed || isActivationKeyActive) {
+          deactivateExtension();
         }
       }
     });
 
+    document.addEventListener('keyup', (e) => {
+      // Update key states first
+      updateKeyStates(e);
+
+      const releasedKey = getKeyFromEvent(e);
+
+      // ALWAYS deactivate on ANY key release if we're active or waiting
+      if (isKeyPressed || isActivationKeyActive) {
+        deactivateExtension();
+      }
+
+      // Double-check: if activation key specifically was released, definitely deactivate
+      if (releasedKey === activationKey) {
+        deactivateExtension();
+      }
+    });
+
     document.addEventListener('mousedown', (e) => {
-      if (!isKeyPressed || e.button !== 0) return;
+      if (!isActivationKeyActive || e.button !== 0) return;
 
       e.preventDefault();
       startX = e.pageX;
@@ -178,8 +275,8 @@
     });
 
     document.addEventListener('mousemove', (e) => {
-      // Only start selecting if key is pressed, mouse is down, and we have start coordinates
-      if (!isKeyPressed || startX === undefined || startY === undefined) {
+      // Only start selecting if extension is active, mouse is down, and we have start coordinates
+      if (!isActivationKeyActive || startX === undefined || startY === undefined) {
         return;
       }
 
@@ -208,8 +305,8 @@
 
       e.preventDefault();
 
-      // If key is still pressed, don't open links yet (wait for key release)
-      if (isKeyPressed) {
+      // If extension is still active, don't open links yet (wait for key release)
+      if (isActivationKeyActive) {
         return;
       }
 
@@ -219,13 +316,15 @@
     });
 
     window.addEventListener('blur', () => {
-      if (isSelecting) {
-        clearSelection();
-        isSelecting = false;
-        isKeyPressed = false;
-        document.body.style.cursor = '';
-        startX = undefined;
-        startY = undefined;
-      }
+      // Always deactivate on window blur
+      deactivateExtension();
     });
+
+    // Add additional safety net: periodically check if we should be deactivated
+    setInterval(() => {
+      if ((isKeyPressed || isActivationKeyActive) && !document.hasFocus()) {
+        // If extension is active but window doesn't have focus, deactivate
+        deactivateExtension();
+      }
+    }, 250);
   })();
