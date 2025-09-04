@@ -1,4 +1,4 @@
-(function() {
+  (function() {
     let isSelecting = false;
     let startX, startY;
     let selectionBox = null;
@@ -11,6 +11,7 @@
     let statusCheckInterval = null;
     let lastKeyStates = { ctrl: false, shift: false, alt: false, meta: false };
     let stateValidationInterval = null;
+    let autoScrollInterval = null;
 
     chrome.storage.sync.get(['activationKey'], (result) => {
       if (result.activationKey) {
@@ -160,6 +161,7 @@
       document.body.style.cursor = 'crosshair';
     }
 
+
     function deactivateExtension() {
       isActivationKeyActive = false;
       isKeyPressed = false;
@@ -179,6 +181,11 @@
       if (stateValidationInterval) {
         clearInterval(stateValidationInterval);
         stateValidationInterval = null;
+      }
+
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
       }
 
       // Reset coordinates
@@ -201,6 +208,54 @@
       lastKeyStates.shift = e.shiftKey;
       lastKeyStates.alt = e.altKey;
       lastKeyStates.meta = e.metaKey;
+    }
+
+    function startAutoScroll(mouseY, mouseX) {
+      // Stop any existing scroll
+      stopAutoScroll();
+
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+      const scrollZone = 100; // Pixels from edge to trigger scrolling
+
+      let scrollSpeedY = 0;
+      let scrollSpeedX = 0;
+
+      // Vertical scrolling
+      if (mouseY < scrollZone) {
+        // Scroll up when near top
+        const distance = scrollZone - mouseY;
+        scrollSpeedY = -Math.min(20, Math.max(3, distance / 5));
+      } else if (mouseY > windowHeight - scrollZone) {
+        // Scroll down when near bottom
+        const distance = mouseY - (windowHeight - scrollZone);
+        scrollSpeedY = Math.min(20, Math.max(3, distance / 5));
+      }
+
+      // Horizontal scrolling (optional)
+      if (mouseX < scrollZone) {
+        // Scroll left when near left edge
+        const distance = scrollZone - mouseX;
+        scrollSpeedX = -Math.min(20, Math.max(3, distance / 5));
+      } else if (mouseX > windowWidth - scrollZone) {
+        // Scroll right when near right edge
+        const distance = mouseX - (windowWidth - scrollZone);
+        scrollSpeedX = Math.min(20, Math.max(3, distance / 5));
+      }
+
+      // Only start interval if we need to scroll
+      if (scrollSpeedY !== 0 || scrollSpeedX !== 0) {
+        autoScrollInterval = setInterval(() => {
+          window.scrollBy(scrollSpeedX, scrollSpeedY);
+        }, 30); // ~33fps
+      }
+    }
+
+    function stopAutoScroll() {
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+      }
     }
 
     document.addEventListener('keydown', (e) => {
@@ -277,6 +332,8 @@
     document.addEventListener('mousemove', (e) => {
       // Only start selecting if extension is active, mouse is down, and we have start coordinates
       if (!isActivationKeyActive || startX === undefined || startY === undefined) {
+        // Stop auto-scroll if not actively selecting
+        stopAutoScroll();
         return;
       }
 
@@ -290,11 +347,17 @@
       const currentX = e.pageX;
       const currentY = e.pageY;
 
+      // Always update auto-scrolling based on current mouse position
+      startAutoScroll(e.clientY, e.clientX);
+
       updateSelectionBox(startX, startY, currentX, currentY);
       selectedLinks = getLinksInSelection(startX, startY, currentX, currentY);
     });
 
     document.addEventListener('mouseup', (e) => {
+      // Stop auto-scrolling when mouse is released
+      stopAutoScroll();
+
       // Reset start coordinates when mouse is released
       if (startX !== undefined || startY !== undefined) {
         startX = undefined;
