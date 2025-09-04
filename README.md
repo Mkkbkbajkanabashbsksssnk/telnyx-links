@@ -126,5 +126,5 @@ If you encounter any issues or have suggestions:
 ---
 
 **Version:** 1.0.0  
-**Author:** [Your Name]  
+**Author:** Tony Rizo  
 **Last Updated:** September 2025
