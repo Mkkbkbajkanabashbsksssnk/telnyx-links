@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Telnyx Links</h1>
+    
+    <div class="settings-section">
+      <label for="activation-key">Activation Key:</label>
+      <button id="activation-key" class="key-button">Shift</button>
+      <span id="key-status" class="status">Press to change</span>
+    </div>
+    
+    <div class="instructions">
+      <h3>How to use:</h3>
+      <ol>
+        <li>Hold the activation key</li>
+        <li>Click and drag to select links</li>
+        <li>Release the key to open selected links</li>
+      </ol>
+    </div>
+    
+    <div class="footer">
+      <button id="reset-button" class="reset-btn">Reset to Default</button>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

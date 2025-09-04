@@ -1,0 +1,31 @@
+.telnyx-selection-box {
+  position: absolute;
+  background: rgba(144, 238, 144, 0.3);
+  border: 2px solid rgba(144, 238, 144, 0.8);
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 999999;
+  transition: none;
+}
+
+.telnyx-selected-link {
+  background: rgba(144, 238, 144, 0.4) !important;
+  outline: 2px solid rgba(144, 238, 144, 0.8) !important;
+  outline-offset: -2px !important;
+  border-radius: 3px !important;
+  position: relative !important;
+  z-index: 999998 !important;
+}
+
+.telnyx-selected-link::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(144, 238, 144, 0.2);
+  pointer-events: none;
+  border-radius: 3px;
+  z-index: 999997;
+}
